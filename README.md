@@ -53,22 +53,15 @@ getData();
 ```
 
 * in de callback functie in de theme-ajax.php gaan we straks de query opbouwen, taxonomys inladen, de post title, permalink etc inladen en de data terugsturen naar de fetch() function in een aparte js file later
-* We gaan even een hardcoded filter toevoegen en kijken of deze iets terug geeft in de console log
+* We gaan even een hardcoded filter toevoegen in de fetch(), dat doen we door ?filter=activiteit toe te voegen.  maar dit kunnen ook bv alle terms zijn o.i.d. Maar we houden het nu even zo simpel mogelijk.
 
 ```JavaScript
   fetch("/wp-json/mywebsite/v1/photofilters?filter=activiteit", {
 ```
 
-```
-GET https://mywebsite.nl/wp-json/mywebsite/v1/photofilters?filter=activiteit 404 (Not Found)
-{code: "rest_no_route", message: "Geen route gevonden die overeenkomt met de URL en aanvraagmethode.", data: {…}}
-```
+* Nu gaan we de gebouwde parameters opbouwen en deze meesturen in de call (in dit geval nu even de hardcoded filter ?filter=activiteit.
 
-We krijgen 2 dingen terug, de console.log van de DATA van de fetch request en een 404 met de aangemaakte filter params. Het klopt dat we een 404 krijgen want we doen er nog niets mee.
-
-* Nu gaan we parameters opbouwen en deze meesturen in de call
-
-```HTML
+```PHP
 function get_projectfilters_results($request) // data krijg je terug van je call => request
 {
     $params = $request->get_params();
@@ -76,3 +69,14 @@ function get_projectfilters_results($request) // data krijg je terug van je call
     return ['data' => $params,];
 }
 ```
+
+Nu gaan we kijken of we daadwerkelijk al iets terugkrijgen in de console
+
+```
+GET https://mywebsite.nl/wp-json/mywebsite/v1/photofilters?filter=activiteit 404 (Not Found)
+{code: "rest_no_route", message: "Geen route gevonden die overeenkomt met de URL en aanvraagmethode.", data: {…}}
+```
+
+We krijgen 2 dingen terug, de console.log van de DATA van de fetch request en een 404 met de aangemaakte filter params. Het klopt dat we een 404 krijgen want we doen er nog niets mee. De basis werkt dus tot nu toe.
+
+## Filters uitlezen en DATA meesturen on Click
