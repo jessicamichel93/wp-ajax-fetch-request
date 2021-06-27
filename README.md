@@ -80,3 +80,63 @@ GET https://mywebsite.nl/wp-json/mywebsite/v1/photofilters?filter=activiteit 404
 We krijgen 2 dingen terug, de console.log van de DATA van de fetch request en een 404 met de aangemaakte filter params. Het klopt dat we een 404 krijgen want we doen er nog niets mee. De basis werkt dus tot nu toe.
 
 ## Filters uitlezen en DATA meesturen on Click
+Als het goed is, heb je al een archive page met filters in de form van checkboxes o.i.d. Voor de uitleg gaan we even verder met de filters die ik had aangemaakt. We gaan nu de filters uitlezen en on Click de data meesturen naar de call. 
+
+* Buiten de fetch() voegen we onze variabelen toe, een click functie op de filter labels en bouwen we een object op waar alle taxonomys en terms ingeladen worden.
+
+```JavaScript
+// Variables
+const filters = document.querySelectorAll(".filters__item-label");
+const filterObj = [];
+
+filters.forEach((filter) => {
+  filter.addEventListener("click", () => {
+    const taxonomy = filter.dataset.tax; // inladen van de data attrubuten met dataset
+    const term = filter.dataset.term;
+
+    addFilterToObject(taxonomy, term);
+		getData();
+		// getData(); halen we onderaan het bestand weg en roepen we nu aan op elke klik
+
+  });
+});
+
+
+const addFilterToObject = (key, value) => {
+  if (key in filterObj) {
+    if (filterObj[key].includes(value)) {
+      filterObj[key] = filterObj[key].filter((filter) => filter !== value);
+		 if (!filterObj[key].length) {
+        delete filterObj[key];
+      }
+    } else {
+      filterObj[key] = [...filterObj[key], value];
+    }
+  } else {
+    filterObj[key] = [value];
+  }
+
+  console.log(filterObj);
+};
+```
+
+* Nu we een filter object hebben met de taxonomy en terms, kunnen we verder gaan en onze parameters dynamisch inladen in de fetch request.
+
+```JavaScript
+const createParams = () => {
+  // Met object.entries kunnen we door een object loopen
+  Object.entries(filterObj).forEach(([key, value]) => {
+    console.log(`${key} ${value}`); // "a 5", "b 7", "c 9"
+  });
+};
+```
+
+De fetch() wijzigen we dan naar de variable met de custom params
+```JavaScript
+  fetch(`/wp-json/mywebsite/v1/photofilters/${createParams}`, {
+```
+
+* Nu gaan we de custom query string opbouwen die als parameters ingeladen worden
+```JavaScript
+
+```
