@@ -13,7 +13,7 @@ Stap voor stap uitleg om een wordpress ajax call te bouwen met fetch() ES6.
 * We maken een los bestand aan die geinclude wordt door de functions.php
 * Hierin gaan we met de standaard wordpress functie aan de slag om een basis request te maken. Die geven we een callback mee, wat er zo uitziet
 
-```HTML
+```PHP
 add_action('rest_api_init', function () {
     register_rest_route('mywebsite/v1', '/photofilters', [
         'methods' => 'GET',
