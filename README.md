@@ -140,3 +140,4 @@ De fetch() wijzigen we dan naar de variable met de custom params
 ```JavaScript
 
 ```
+Meer stappen binnenkort...
