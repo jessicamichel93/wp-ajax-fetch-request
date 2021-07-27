@@ -79,6 +79,8 @@ GET https://mywebsite.nl/wp-json/mywebsite/v1/photofilters?filter=activiteit 404
 
 We krijgen 2 dingen terug, de console.log van de DATA van de fetch request en een 404 met de aangemaakte filter params. Het klopt dat we een 404 krijgen want we doen er nog niets mee. De basis werkt dus tot nu toe.
 
+NOTE: DIT KLOPT NIET, moet ik nog aanpassen.
+
 ## Filters uitlezen en DATA meesturen on Click
 Als het goed is, heb je al een archive page met filters in de form van checkboxes o.i.d. Voor de uitleg gaan we even verder met de filters die ik had aangemaakt. We gaan nu de filters uitlezen en on Click de data meesturen naar de call. 
 
