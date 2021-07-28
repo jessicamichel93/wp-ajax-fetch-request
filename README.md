@@ -106,6 +106,7 @@ __proto__: Object
 ```
 
 ## Custom Filters
+* Nu we data terug hebben, laten we zorgen dat we de data on click terugkrijgen op een checkbox met filters erbij
 * We gaan even een hardcoded filter toevoegen in de fetch(), dat doen we door ?filter=activiteit toe te voegen.  maar dit kunnen ook bv alle terms zijn o.i.d. Maar we houden het nu even zo simpel mogelijk.
 
 ```JavaScript
