@@ -327,6 +327,71 @@ add_action('rest_api_init', function () {
 Als je nu filterd zou je in de console nu ook alleen de filtterde posts moeten terug krijgen!
 
 ## Clear results & DOM elementen opbouwen
+Nu gaan we onze gefilterde data in de DOM opbouwen!
+
+Eerst willen we dat na elke klik op de filter alle posts verwijderd worden en dan pas de gefilterde posts getoond worden. Daarvoor maken we eerst een clear result functie aan en voegen we deze toe.
+
+De functie zelf roepen we voor nu even aan na elke klik op de filters
+
+```JavaScript
+  const clearResults = () => {
+    // Remove old items
+    document
+      .querySelectorAll('.projects__card')
+      .forEach((item) => item.remove());
+  };
+
+filters.forEach((filter) => {
+    filter.addEventListener('click', () => {
+      const taxonomy = filter.dataset.tax;
+      const { term } = filter.dataset;
+
+      addFilterToObject(taxonomy, term);
+
+      clearResults(); // alleen deze is toegevoegd, de rest hadden we al.
+      getData();
+    });
+  });
+
+  
+```
+
+Als het goed is zou je nu moeten zien dat bij elke klik alle posts die standaard ingeladen werde, worden verwijderd!
+
+Nu gaan we de elementen via de DOM opnieuw opbouwen, om uiteindelijk de gefilterde posts die we terug krijgen in onze console op te bouwen in de DOM.
+
+* Maak van het item, dus het hele element van een bericht o.i.d een los bestand, een componnet. Dat maakt het later overzichtelijker
+* Nu je een los bestand hebt van je bericht card, en deze hebt toegevoegd op de plek waar deze ingeladen moet worden, maken we hieronder een <template></template> aan. Dit template kunnen we straks makkelijk klonen en dus opbouwen in de DOM.
+
+In mijn voorbeeld ziet dat er nu zo uit. (deel van de code van het hele bestand)
+
+```HTML
+ <?php while ($query->have_posts()) : $query->the_post(); ?>
+
+                <?php get_template_part('templates/component/component', 'project-card', $showfilters); ?>
+
+                <template id="project-card">
+                    <div class="col-md-6 col-lg-4">
+                        <a href="">
+                            <article class="projects__card">
+                                <div class="projects__image-wrapper">
+                                    <img src="" class="projects__image">
+                                    <div class="projects__categories">
+                                        <div class="projects__category">
+                                        </div>
+                                    </div>
+                                </div>
+                                <h1 class="h2 projects__name"></h1>
+                                <div class="projects__description"></div>
+                                <div class="projects__link"></div>
+
+                            </article>
+                        </a>
+                    </div>
+                </template>
+
+            <?php endwhile; ?>
+```
 
 
 Meer stappen binnenkort...
