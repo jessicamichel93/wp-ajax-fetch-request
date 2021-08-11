@@ -241,7 +241,7 @@ function get_projectfilters_results($request) // data krijg je terug van je call
 }
 ```
 
-* We voegen nu een check toe, als de params bestaan, voeg dan de tax_query toe met de term en tax aan de huidige args
+We voegen nu een check toe, als de params bestaan, voeg dan de tax_query toe met de term en tax aan de huidige args
 
 ```PHP
 function get_projectfilters_results($request) // data krijg je terug van je call => request
@@ -265,7 +265,64 @@ function get_projectfilters_results($request) // data krijg je terug van je call
 	
    }
 }
+```
 
+Alles bij elkaar zou dit nu je callback functie moeten zijn
+
+```PHP
+
+function get_photofilters_results($request)
+{
+    $params = $request->get_params();
+    $postType = 'portfolio_type';
+    $postPerPage = 9;
+
+    $args = [
+        'post_type' => $postType,
+        'post_status' => 'publish',
+        'posts_per_page' => $postPerPage,
+
+    ];
+
+    $tax = [];
+
+    if ($params) {
+        $tax['relationship'] = "OR";
+
+        foreach ($params as $key => $terms) {
+            $terms = explode(',', $terms);
+            $tax[] = [
+                'taxonomy' => $key,
+                'field' => 'slug',
+                'terms' => $terms,
+            ];
+        }
+        $args['tax_query'] = $tax;
+    }
+
+    $posts = [];
+    $query = new WP_Query($args);
+
+    foreach ($query->posts as $post) {
+        $post = (array)[
+            'title' => $post->post_title,
+            'post_id' => $post->ID,
+            'permalink' => get_permalink($post->ID),
+        ];
+        $posts[] = $post;
+    }
+
+    return ['data' => $posts];
+}
+
+add_action('rest_api_init', function () {
+    register_rest_route('mywebsite/v1', '/postfilters', [
+        'methods' => 'GET',
+        'callback' => 'get_photofilters_results',
+    ]);
+});
+
+```
 
 Meer stappen binnenkort...
 
