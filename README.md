@@ -250,7 +250,7 @@ function get_projectfilters_results($request) // data krijg je terug van je call
 
     $tax = [];
 
-	if ($params) {
+    if ($params) {
 	$tax['relationship'] = "OR";
 
 	foreach ($params as $key => $terms) {
@@ -262,7 +262,8 @@ function get_projectfilters_results($request) // data krijg je terug van je call
 	    ];
 	}
 	$args['tax_query'] = $tax;
-	}
+	
+   }
 }
 
 
