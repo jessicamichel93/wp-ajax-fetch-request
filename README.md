@@ -214,30 +214,56 @@ data: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
 
 De fetch() wijzigen we naar de een functie die we voor nu createParams noemen.
 ```JavaScript
-  fetch(`/wp-json/mywebsite/v1/photofilters/${createParams}`, {
+  fetch(`/wp-json/mywebsite/v1/postfilters${createParams()}`, {
 ```
 
 Uiteraard voegen we dan ook de functie toe in ons JS bestand. Met deze functie loopen we straks door onze data attributen tax en term
 
 ```JavaScript
-const createParams = () => {
-  // Met object.entries kunnen we door een object loopen
-  Object.entries(filterObj).forEach(([key, value]) => {
-    console.log(`${key} ${value}`); // "a 5", "b 7", "c 9"
-  });
-};
+  const createParams = () => {
+    let queryString = '';
+    // Met object.entries kunnen we door een object loopen
+    Object.entries(filterObj).forEach(([key, value]) => {
+      queryString = queryString === '' ? `?${key}=${value.join(',')}` : `${queryString}&${key}=${value.join(',')}`;
+    });
+    return queryString;
+  };
 ```
 
-* Nu gaan we de gebouwde parameters opbouwen en deze meesturen in de call (in dit geval nu even de hardcoded filter ?filter=activiteit.
+* Nu gaan we de gebouwde parameters opbouwen en deze meesturen in de call, de params var plaatsen we bovenaan onze callback functie
 
 ```PHP
 function get_projectfilters_results($request) // data krijg je terug van je call => request
 {
     $params = $request->get_params();
 
-    return ['data' => $params,];
+    // rest van de code (nu even niet getoond i.v.m voorbeeld)
 }
 ```
+
+* We voegen nu een check toe, als de params bestaan, voeg dan de tax_query toe met de term en tax aan de huidige args
+
+```PHP
+function get_projectfilters_results($request) // data krijg je terug van je call => request
+{
+    $params = $request->get_params();
+
+    $tax = [];
+
+	if ($params) {
+	$tax['relationship'] = "OR";
+
+	foreach ($params as $key => $terms) {
+	    $terms = explode(',', $terms);
+	    $tax[] = [
+		'taxonomy' => $key,
+		'field' => 'slug',
+		'terms' => $terms,
+	    ];
+	}
+	$args['tax_query'] = $tax;
+	}
+}
 
 
 Meer stappen binnenkort...
