@@ -119,6 +119,7 @@ const filterObj = [];
 
 filters.forEach((filter) => {
   filter.addEventListener("click", () => {
+
   getData();
   // getData(); halen we onderaan het bestand weg en roepen we nu aan op elke klik
 
@@ -130,11 +131,11 @@ filters.forEach((filter) => {
 Vervolgens voegen we in de html onze data attributen tie die we later kunnen uitlezen, wat er zo gaat uitzien 
 
 
-```HTML
- <div class="filters__item">
-                                        <h3 class="filters__item-title filters__item-title--sub" data-id="<?php echo $title; ?>"><?php _e($title, 'SBF'); ?></h3>
-                                        <div class="filters__item-content">
-                                            <div class="filters__item-content-inner filters__item-content-inner--blackbg p-3">
+```PHP
+<div class="filters__item">
+	<h3 class="filters__item-title filters__item-title--sub" data-id="<?php echo $title; ?>"><?php _e($title, 'SBF'); ?></h3>
+        <div class="filters__item-content">
+        <div class="filters__item-content-inner filters__item-content-inner--blackbg p-3">
                                                 <?php foreach ($taxonomy as $term) :
                                                     $filterInput = [];
                                                     $filterInput['type'][] = 'checkbox';
@@ -167,14 +168,13 @@ filters.forEach((filter) => {
     const term = filter.dataset.term;
 
     addFilterToObject(taxonomy, term);
-		getData();
-		// getData(); halen we onderaan het bestand weg en roepen we nu aan op elke klik
+
+    getData();
+    // getData(); halen we onderaan het bestand weg en roepen we nu aan op elke klik
 
   });
 });
 ```
-
-
 
 ```JavaScript
 
@@ -196,7 +196,28 @@ const addFilterToObject = (key, value) => {
 };
 ```
 
-* Nu we een filter object hebben met de taxonomy en terms, kunnen we verder gaan en onze parameters dynamisch inladen in de fetch request.
+Als het goed is krijg je nu de data van alle posts terug en de data welke filters je hebt aangevinkt
+
+```
+[category: Array(2)]
+category: (2) ["blog", "nieuws"]
+length: 0
+[[Prototype]]: Array(0)
+postfilters.ts:11 
+{data: Array(9)}
+data: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+
+```
+
+## Custom Filters
+* Nu we data terug krijgen welke filters aangevinkt zijn, laten we nu ook de custom filters met parameters bouwen die vervolgend dynamisch worden ingeladen.
+
+De fetch() wijzigen we naar de een functie die we voor nu createParams noemen.
+```JavaScript
+  fetch(`/wp-json/mywebsite/v1/photofilters/${createParams}`, {
+```
+
+Uiteraard voegen we dan ook de functie toe in ons JS bestand. Met deze functie loopen we straks door onze data attributen tax en term
 
 ```JavaScript
 const createParams = () => {
@@ -205,24 +226,6 @@ const createParams = () => {
     console.log(`${key} ${value}`); // "a 5", "b 7", "c 9"
   });
 };
-```
-
-De fetch() wijzigen we dan naar de variable met de custom params
-```JavaScript
-  fetch(`/wp-json/mywebsite/v1/photofilters/${createParams}`, {
-```
-
-* Nu gaan we de custom query string opbouwen die als parameters ingeladen worden
-```JavaScript
-
-```
-Meer stappen binnenkort...
-
-## Custom Filters
-* We gaan even een hardcoded filter toevoegen in de fetch(), dat doen we door ?filter=activiteit toe te voegen.  maar dit kunnen ook bv alle terms zijn o.i.d. Maar we houden het nu even zo simpel mogelijk.
-
-```JavaScript
-  fetch("/wp-json/mywebsite/v1/photofilters/?filter=activiteit", {
 ```
 
 * Nu gaan we de gebouwde parameters opbouwen en deze meesturen in de call (in dit geval nu even de hardcoded filter ?filter=activiteit.
@@ -236,13 +239,6 @@ function get_projectfilters_results($request) // data krijg je terug van je call
 }
 ```
 
-Nu gaan we kijken of we daadwerkelijk al iets terugkrijgen in de console
 
-```
-GET https://mywebsite.nl/wp-json/mywebsite/v1/photofilters?filter=activiteit 404 (Not Found)
-{code: "rest_no_route", message: "Geen route gevonden die overeenkomt met de URL en aanvraagmethode.", data: {…}}
-```
+Meer stappen binnenkort...
 
-We krijgen 2 dingen terug, de console.log van de DATA van de fetch request en een 404 met de aangemaakte filter params. Het klopt dat we een 404 krijgen want we doen er nog niets mee. De basis werkt dus tot nu toe.
-
-NOTE: DIT KLOPT NIET, moet ik nog aanpassen.
