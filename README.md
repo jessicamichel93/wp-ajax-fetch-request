@@ -324,5 +324,10 @@ add_action('rest_api_init', function () {
 
 ```
 
+Als je nu filterd zou je in de console nu ook alleen de filtterde posts moeten terug krijgen!
+
+## Clear results & DOM elementen opbouwen
+
+
 Meer stappen binnenkort...
 
