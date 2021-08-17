@@ -396,3 +396,4 @@ In mijn voorbeeld ziet dat er nu zo uit. (deel van de code van het hele bestand)
 
 Meer stappen binnenkort...
 
+TO DO uitzoeken, kan ook met https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
